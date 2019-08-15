@@ -40,6 +40,7 @@ const education = require("./routes/api/education")
 const skill = require("./routes/api/skill")
 const company = require("./routes/api/company")
 const project = require("./routes/api/project")
+const allData = require("./routes/api/allData")
 
 app.get("/",(req, res) => {
     res.send('Hello World!')
@@ -50,6 +51,7 @@ app.use("/api/education", education)
 app.use("/api/skill", skill)
 app.use("/api/company", company)
 app.use("/api/project", project)
+app.use("/api/allData", allData)
 
 const port = process.env.PORT || 5000
 
