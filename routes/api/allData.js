@@ -6,7 +6,7 @@ const AllData = require('../../modules/AllData')
 
 
 
-router.get('/', (req, res) => {
+router.get('/all', (req, res) => {
         AllData.find()
             .then(AllData => {
                 if (!AllData) {
