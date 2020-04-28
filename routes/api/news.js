@@ -8,7 +8,7 @@ const News = require('../../modules/News')
 
 router.get('/', (req, res) => {
     let page = req.query.page || 1
-    let pageSize = req.body.pageSize || 10
+    let pageSize = req.query.pageSize || 10
     let skip = (page - 1) * pageSize
     let params = {}
     News.find(params).skip(skip).limit(pageSize)
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
             if (!news) {
                 return res.status(404).json('没有任何内容')
             }
-            const data = {}
+            let data = {}
             data.items = news
             data.total = news.length
             res.status(200).json(data)
