@@ -21,8 +21,8 @@ app.use(helmet())
 app.use(compression())
 
 // 使用body-parser中间件
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 // DB config
@@ -30,6 +30,9 @@ app.use(bodyParser.json())
 const db = require("./config/key").mongoURI
 
 // Connect to mongodb
+mongoose.set('useFindAndModify', false)
+mongoose.set('useUnifiedTopology', true)
+mongoose.set('useNewUrlParser', true)
 mongoose.connect( db)
     .then(() => {
         console.log("MongoDB Connected")
@@ -41,6 +44,7 @@ mongoose.connect( db)
 // const company = require("./routes/api/company")
 // const project = require("./routes/api/project")
 const allData = require("./routes/api/allData")
+const news = require("./routes/api/news")
 
 app.get("/",(req, res) => {
     res.send('Hello World!')
@@ -50,7 +54,7 @@ app.get("/",(req, res) => {
 // app.use("/api/education", education)
 // app.use("/api/skill", skill)
 // app.use("/api/company", company)
-// app.use("/api/project", project)
+app.use("/api/news", news)
 app.use("/api/allData", allData)
 
 const port = process.env.PORT || 5000
