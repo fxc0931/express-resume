@@ -11,6 +11,14 @@ router.get('/', (req, res) => {
     let pageSize = req.query.pageSize || 10
     let skip = (page - 1) * pageSize
     let params = {}
+    let number = 0
+    News.count({}, (err, count) => {
+        if (err) {
+            console.log(err);
+        } else {
+            number = count
+        }
+    })
     News.find(params).skip(skip).limit(pageSize)
         .then(news => {
             if (!news) {
@@ -18,7 +26,7 @@ router.get('/', (req, res) => {
             }
             let data = {}
             data.items = news
-            data.total = news.length
+            data.total = number
             res.status(200).json(data)
         })
         .catch(err => res.status(404).json(err))
@@ -39,17 +47,6 @@ router.get('/:id', (req, res) => {
 
 
 router.post('/add', (req, res) => {
-
-    // const AllDataFields = {
-    //     author: 'fx',
-    //     content: '"<p>dsfsf</p><p><audio style="display: none;" controls="controls"></audio></p>"',
-    //     content_short: 'fxcfxc',
-    //     image_uri: 'string is too large to edit',
-    //     title: 'FXC',
-    //     status: 'published',
-    //     display_time: '2012'
-    // }
-    // console.log(AllDataFields, 'ss');
     const newsFields = {}
     if (req.body.author) newsFields.author = req.body.author
     if (req.body.content) newsFields.content = req.body.content
