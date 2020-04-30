@@ -12,14 +12,14 @@ router.get('/', (req, res) => {
     let skip = (page - 1) * pageSize
     let params = {}
     let number = 0
-    News.count({}, (err, count) => {
+    News.countDocuments({}, (err, count) => {
         if (err) {
             console.log(err);
         } else {
             number = count
         }
     })
-    News.find(params).skip(skip).limit(pageSize)
+    News.find(params).skip(skip).limit(pageSize).sort([['_id', -1]])
         .then(news => {
             if (!news) {
                 return res.status(404).json('没有任何内容')
@@ -27,6 +27,40 @@ router.get('/', (req, res) => {
             let data = {}
             data.items = news
             data.total = number
+            res.status(200).json(data)
+        })
+        .catch(err => res.status(404).json(err))
+}
+)
+
+router.get('/firstPage', (req, res) => {
+    let params = {
+        "status": "已发布"
+    }
+    News.find(params).skip(0).limit(3).sort([['display_time', -1]])
+        .then(news => {
+            if (!news) {
+                return res.status(404).json('没有任何内容')
+            }
+            let data = {}
+            data.items = news
+            res.status(200).json(data)
+        })
+        .catch(err => res.status(404).json(err))
+}
+)
+
+router.get('/published', (req, res) => {
+    let params = {
+        "status": "已发布"
+    }
+    News.find(params).skip(0).limit(20).sort([['display_time', -1]])
+        .then(news => {
+            if (!news) {
+                return res.status(404).json('没有任何内容')
+            }
+            let data = {}
+            data.items = news
             res.status(200).json(data)
         })
         .catch(err => res.status(404).json(err))
